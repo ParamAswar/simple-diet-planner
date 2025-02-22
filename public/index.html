@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Diet AI Plan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #0a0f29;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Star Animation */
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        /* Container for Form */
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            width: 400px;
+            box-shadow: 0 0 20px rgba(0, 162, 255, 0.8);
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 26px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #00a2ff;
+            text-shadow: 0 0 10px rgba(0, 162, 255, 0.8);
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-size: 16px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #1a1f3b;
+            color: white;
+            font-size: 16px;
+            transition: 0.3s;
+            text-align: center;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #006eff, #00a2ff);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            box-shadow: 0 0 20px rgba(0, 162, 255, 1);
+            transform: scale(1.1);
+        }
+
+        /* Results Box */
+        #result {
+            margin-top: 20px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Stars Background -->
+    <div class="stars"></div>
+
+    <div class="container">
+        <h1>Smart Diet AI Plan</h1>
+        <p>Get your personalized diet recommendations</p>
+
+        <label>Age:</label>
+        <input type="number" id="age" placeholder="Enter your age">
+
+        <label>Weight (kg):</label>
+        <input type="number" id="weight" placeholder="Enter your weight">
+
+        <label>Height (cm):</label>
+        <input type="number" id="height" placeholder="Enter your height">
+
+        <label>Diet Type:</label>
+        <select id="dietType">
+            <option value="vegetarian">Vegetarian</option>
+            <option value="non-vegetarian">Non-Vegetarian</option>
+            <option value="vegan">Vegan</option>
+        </select>
+
+        <label>Diabetes:</label>
+        <select id="diabetes">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+        </select>
+
+        <button onclick="calculateDiet()">Get Diet Plan</button>
+
+        <!-- Result Display -->
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculateDiet() {
+            // Get User Inputs
+            let weight = parseFloat(document.getElementById('weight').value);
+            let height = parseFloat(document.getElementById('height').value) / 100; // Convert cm to meters
+            let dietType = document.getElementById('dietType').value;
+            let hasDiabetes = document.getElementById('diabetes').value === 'yes';
+
+            // BMI Calculation
+            let bmi = weight / (height * height);
+            let category = '';
+
+            if (bmi < 18.5) {
+                category = 'Underweight';
+            } else if (bmi >= 18.5 && bmi < 24.9) {
+                category = 'Normal';
+            } else if (bmi >= 25 && bmi < 29.9) {
+                category = 'Overweight';
+            } else {
+                category = 'Obese';
+            }
+
+            // Diet Suggestions
+            let dietPlan = '';
+
+            if (category === 'Underweight') {
+                dietPlan = "Include high-calorie foods like nuts, dairy, and whole grains.";
+            } else if (category === 'Normal') {
+                dietPlan = "Maintain a balanced diet with proteins, carbs, and healthy fats.";
+            } else if (category === 'Overweight') {
+                dietPlan = "Focus on fiber-rich foods, lean proteins, and avoid processed carbs.";
+            } else {
+                dietPlan = "Follow a strict low-calorie diet with more greens and lean proteins.";
+            }
+
+            // Adjust for Dietary Preference
+            if (dietType === 'vegan') {
+                dietPlan += " Opt for plant-based proteins like lentils, beans, and tofu.";
+            } else if (dietType === 'vegetarian') {
+                dietPlan += " Include dairy and eggs for a protein boost.";
+            } else {
+                dietPlan += " Include lean meats and fish for additional nutrients.";
+            }
+
+            // Adjust for Diabetes
+            if (hasDiabetes) {
+                dietPlan += " Avoid sugary foods, focus on low-GI foods like oats and beans.";
+            }
+
+            // Display Result
+            let resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<strong>Your BMI:</strong> ${bmi.toFixed(2)} (${category})<br><br>
+                                   <strong>Recommended Diet Plan:</strong> ${dietPlan}`;
+            resultDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
